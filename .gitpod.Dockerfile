@@ -7,3 +7,6 @@ RUN cd ~ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
+RUN pip install --upgrade mxnet gluoncv
+
+USER root
