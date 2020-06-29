@@ -1,7 +1,7 @@
 FROM gitpod/workspace-full
 
-RUN apt-get -y update
-RUN apt-get install -y --fix-missing \
+RUN sudo apt-get -y update
+RUN sudo apt-get install -y --fix-missing \
     build-essential \
     cmake \
     gfortran \
@@ -25,7 +25,7 @@ RUN apt-get install -y --fix-missing \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
 RUN cd ~ && \
-    mkdir -p dlib && \
+    sudo mkdir -p dlib && \
     git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
