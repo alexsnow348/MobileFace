@@ -7,10 +7,7 @@ FROM gitpod/workspace-full
 # More information: https://www.gitpod.io/docs/config-docker/
 RUN sudo apt-get install build-essential cmake pkg-config -y && \
 sudo apt-get install libx11-dev libatlas-base-dev -y && \
-sudo apt-get install libgtk-3-dev libboost-python-dev -y &&\
-sudo apt-get install python-dev python-pip python3-dev python3-pip  -y && \
-sudo -H pip2 install -U pip numpy && \
-sudo -H pip3 install -U pip numpy 
+sudo apt-get install libgtk-3-dev libboost-python-dev -y 
 
 RUN wget http://dlib.net/files/dlib-19.6.tar.bz2 && \
 tar xvf dlib-19.6.tar.bz2 && \
