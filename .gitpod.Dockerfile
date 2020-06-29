@@ -1,29 +1,48 @@
 FROM gitpod/workspace-full
 
-# Install custom tools, runtimes, etc.
-# For example "bastet", a command-line tetris clone:
-# RUN brew install bastet
-#
-# More information: https://www.gitpod.io/docs/config-docker/
-RUN yes | sudo apt-get install build-essential cmake pkg-config && \
-sudo apt-get install libx11-dev libatlas-base-dev && \
-sudo apt-get install libgtk-3-dev libboost-python-dev 
+RUN apt-get -y update
+RUN apt-get install -y --fix-missing \
+    build-essential \
+    cmake \
+    gfortran \
+    git \
+    wget \
+    curl \
+    graphicsmagick \
+    libgraphicsmagick1-dev \
+    libatlas-base-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libgtk2.0-dev \
+    libjpeg-dev \
+    liblapack-dev \
+    libswscale-dev \
+    pkg-config \
+    python3-dev \
+    python3-numpy \
+    software-properties-common \
+    zip \
+    && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
-RUN yes | wget http://dlib.net/files/dlib-19.6.tar.bz2 && \
-tar xvf dlib-19.6.tar.bz2 && \
-cd dlib-19.6/ && \
-mkdir build && \
-cd build && \
-cmake .. && \
-cmake --build . --config Release && \
-sudo make install && \
-sudo ldconfig && \
-cd .. 
+RUN cd ~ && \
+    mkdir -p dlib && \
+    git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
+    cd  dlib/ && \
+    python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
-RUN yes | cd dlib-19.6 && \
-python setup.py install && \
-rm -rf dist && \
-rm -rf tools/python/build && \
-rm python_examples/dlib.so 
 
-RUN pip install dlib
+# The rest of this file just runs an example script.
+
+# If you wanted to use this Dockerfile to run your own app instead, maybe you would do this:
+# COPY . /root/your_app_or_whatever
+# RUN cd /root/your_app_or_whatever && \
+#     pip3 install -r requirements.txt
+# RUN whatever_command_you_run_to_start_your_app
+
+COPY . /root/face_recognition
+RUN cd /root/face_recognition && \
+    pip3 install -r requirements.txt && \
+    python3 setup.py install
+
+CMD cd /root/face_recognition/examples && \
+    python3 recognize_faces_in_pictures.py
